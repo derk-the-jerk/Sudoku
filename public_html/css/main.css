@@ -1,0 +1,53 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jan 12, 2017, 11:36:22 AM
+    Author     : Derek
+*/
+html, body {
+  padding: 0;
+  margin: 0;
+  font-family: "Open Sans", sans-serif; }
+
+header {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  text-align: center;
+  height: 12vh; }
+
+nav {
+  position: absolute;
+  width: 15%;
+  top: 12vh;
+  right: 5px;
+  text-align: center;
+  background-color: #f2f2f2;
+  padding: 16px;
+  border: solid 1px #e5e5e5;
+  text-align: center;
+  margin: 0 0 16px 0; }
+  nav h2 {
+    font-size: 14px;
+    margin: 0 0 8px 0; }
+
+article {
+  margin-top: 100px; }
+
+input {
+  padding: 4px; }
+
+#puzzle {
+  border: 1px solid red;
+  height: 450px;
+  width: 450px;
+  margin: auto;
+  float: none;
+  text-align: center; }
+  #puzzle td {
+    border: 3px solid green; }
+
+/*# sourceMappingURL=main.css.map */

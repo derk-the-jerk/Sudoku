@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Sudoku</title>
+        <meta charset="UTF-8">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+        <link href="css/main.css" type="text/css" rel="stylesheet">
+        <link rel="icon" href="images/icon.png">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="JS/Taskfile.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <header>
+            <h1>Sudoku Puzzle</h1>
+        </header>
+        <nav>
+            <h2>Stopwatch</h2>
+            <div id="timer">
+                <span class="value_H">00</span>:
+                <span class="value_M">00</span>:
+                <span class="value_S">00</span>
+            </div>
+            <input type="button" value="New Puzzle" id="new_puz" />
+            <input type="button" value="Pause" id="pause_resume" />
+        </nav>
+        <article>
+            <table id="puzzle">
+            </table>
+        </article>
+        <div id="footer"></div>
+    </body>
+</html>
