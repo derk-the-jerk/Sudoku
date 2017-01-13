@@ -41,13 +41,13 @@ input {
   padding: 4px; }
 
 #puzzle {
-  border: 1px solid red;
-  height: 450px;
-  width: 450px;
+  border: 4px ridge #555;
+  height: 360px;
+  width: 360px;
   margin: auto;
   float: none;
   text-align: center; }
   #puzzle td {
-    border: 3px solid green; }
+    border: 1px dotted black; }
 
 /*# sourceMappingURL=main.css.map */

@@ -1,7 +1,7 @@
-//var timeUpdate = setInterval(updateDisplay, 1000); // every second call updateDisplay
+var timeUpdate; // = setInterval(updateDisplay, 1000); // every second call updateDisplay
 //loadTable();
 
-var puzzleOrig = [[5,3,4,6,7,8,9,1,2],
+var puzzleDefault = [[5,3,4,6,7,8,9,1,2],
                  [6,7,2,1,9,5,3,4,8],
                  [1,9,8,3,4,2,5,6,7],
                  [8,5,9,7,6,1,4,2,3],
@@ -37,7 +37,7 @@ function updateDisplay(){ //run stopwatch
     else {$('#timer').find('.value_H').text(value_h); }
 }
 
-function loadTable() { //loads the initial sudoku puzzle
+function loadTable(puzzleOrig) { //loads the initial sudoku puzzle
     var table = document.getElementById("#puzzle"); 
     //var tbody = document.createElement('tbody');
     var tempStr = "";
@@ -46,30 +46,113 @@ function loadTable() { //loads the initial sudoku puzzle
     for (var i=0; i<puzzleOrig.length; i++) {
         tempStr += "<tr>";
         for (var j=0; j<puzzleOrig[i].length; j++) {
-            tempStr += '<td>'+puzzleOrig[i][j]+'</td>';
+            if ((i === 2 || i === 5) && (j === 2 || j === 5)) {
+                tempStr += '<td style="border-bottom:2px solid black;';
+                tempStr += 'border-right:2px solid black;">';
+                tempStr += puzzleOrig[i][j]+'</td>';
+            }
+            else if (i === 2 || i === 5) {
+                tempStr += '<td style="border-bottom:2px solid black;">';
+                tempStr += puzzleOrig[i][j]+'</td>';
+            }
+            else if (j === 2 || j === 5) {
+                tempStr += '<td style="border-right:2px solid black;">';
+                tempStr += puzzleOrig[i][j]+'</td>';
+            }
+            else {
+                tempStr += '<td>'+puzzleOrig[i][j]+'</td>';
+            }
         }
         tempStr += '</tr>';
     }
     //alert('hi');
     $('#puzzle').html(tempStr);
 
-//    
-//    for (row=0; row < puzzleOrig.length; row++) {
-//        var rows = document.createElement('tr');
-//        //alert(rows);
-//        for (col = 0; col < puzzleOrig[row].length; col++) {
-//            var cells = document.createElement('td');
-//            cells.textContent = '1';//puzzleOrig[row][col];
-//            rows.appendChild(cells);
-//        }
-//        tbody.appendChild(rows);
-//    }
-//    table.appendChild(tbody);
+}
+
+function modifyPuzzle (puzzleOrig) {
+    var newPuzzle = puzzleOrig;
+    for (iter = 0; iter < 10; iter ++) {
+        var randTransform = parseInt(Math.random() * 4);
+        switch (randTransform) {
+            case 0: //row swap within a subblock
+                var randSubBlock = parseInt(Math.random() * 3); // sub block
+                var row1 = parseInt(Math.random() * 3) + randSubBlock*3; // row to switch
+                var row2 = parseInt(Math.random() * 3) + randSubBlock*3; // row to switch
+                if (row1 === row2) {
+                    row1 = (row1 + 1) % 3 + randSubBlock * 3;
+                }
+                var tmpRow = newPuzzle[row1];
+                newPuzzle[row1] = newPuzzle[row2];
+                newPuzzle[row2] = tmpRow;
+                break;
+
+            case 1: //swap whole sub blocks 
+                var sub1 = parseInt(Math.random() * 3) * 3;
+                var sub2 = parseInt(Math.random() * 3) * 3;
+                if (sub1 === sub2) { 
+                    sub1 = (sub1 + 3) % 9;
+                }
+                var tmp1 = newPuzzle[sub1];
+                var tmp2 = newPuzzle[sub1 + 1];
+                var tmp3 = newPuzzle[sub1 + 2];
+
+                newPuzzle[sub1] = newPuzzle[sub2];
+                newPuzzle[sub1 + 1] = newPuzzle[sub2 + 1];
+                newPuzzle[sub1 + 2] = newPuzzle[sub2 + 2];
+
+                newPuzzle[sub2] = tmp1;
+                newPuzzle[sub2 + 1] = tmp2;
+                newPuzzle[sub2 + 2] = tmp3;
+                break;
+
+            case 2: //swap columns within sub block
+                var randSubBlock = parseInt(Math.random() * 3); // sub block
+                var col1 = parseInt(Math.random() * 3) + randSubBlock*3; // row to switch
+                var col2 = parseInt(Math.random() * 3) + randSubBlock*3; // row to switch
+                if (col1 === col2) {
+                    col1 = (col1 + 1) % 3 + randSubBlock * 3;
+                }
+                for (row = 0; row < newPuzzle.length; row ++) {
+                    var tmp = newPuzzle[row][col1];
+                    newPuzzle[row][col1] = newPuzzle[row][col2];
+                    newPuzzle[row][col2] = tmp;
+                }    
+                break;
+            case 3: //swap column sub blocks
+                var sub1 = parseInt(Math.random() * 3) * 3;
+                var sub2 = parseInt(Math.random() * 3) * 3;
+                if (sub1 === sub2) {
+                    sub1 = (sub1 + 3) % 9;
+                }
+                for (row=0; row<newPuzzle.length; row++) {
+                    var tmp1 = newPuzzle[row][sub1];
+                    var tmp2 = newPuzzle[row][sub1 + 1];
+                    var tmp3 = newPuzzle[row][sub1 + 2];
+
+                    newPuzzle[row][sub1] = newPuzzle[row][sub2];
+                    newPuzzle[row][sub1 + 1] = newPuzzle[row][sub2 + 1];
+                    newPuzzle[row][sub1 + 2] = newPuzzle[row][sub2 + 2];
+
+                    newPuzzle[row][sub2] = tmp1;
+                    newPuzzle[row][sub2 + 1] = tmp2;
+                    newPuzzle[row][sub2 + 2] = tmp3;
+                }
+                break;
+        }
+    }
+    return newPuzzle;
 }
 
 jQuery(document).ready(function($) {
     $('#new_puz').bind("click", function(e) {
-        loadTable();
+        var puz2load = modifyPuzzle(puzzleDefault);
+        loadTable(puz2load);
+        $('#timer').find('.value_S').text('00');
+        $('#timer').find('.value_M').text('00');
+        $('#timer').find('.value_H').text('00');
+        clearInterval(timeUpdate);
+        timeUpdate = setInterval(updateDisplay, 1000);
     });
     
     $('#pause_resume').bind("click", function(e) {
