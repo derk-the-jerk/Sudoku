@@ -40,6 +40,9 @@ article {
 input {
   padding: 4px; }
 
+#difficulty {
+  text-align: left; }
+
 #puzzle {
   border: 4px ridge #555;
   height: 360px;
@@ -47,7 +50,11 @@ input {
   margin: auto;
   float: none;
   text-align: center; }
+  #puzzle tr {
+    height: 39px; }
   #puzzle td {
+    width: 39px;
+    border-spacing: 0px;
     border: 1px dotted black; }
 
 /*# sourceMappingURL=main.css.map */

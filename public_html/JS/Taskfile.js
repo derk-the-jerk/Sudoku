@@ -35,14 +35,11 @@ function updateDisplay(){ //run stopwatch
     else {$('#timer').find('.value_M').text(value_m); }
     if (value_h < 10) { $('#timer').find('.value_H').text('0' + value_h); }
     else {$('#timer').find('.value_H').text(value_h); }
-}
+}//runs the stopwatch
 
-function loadTable(puzzleOrig) { //loads the initial sudoku puzzle
-    var table = document.getElementById("#puzzle"); 
-    //var tbody = document.createElement('tbody');
+function array2HTML(puzzleOrig) {
     var tempStr = "";
-    //alert(puzzleOrig.length);
-   
+    
     for (var i=0; i<puzzleOrig.length; i++) {
         tempStr += "<tr>";
         for (var j=0; j<puzzleOrig[i].length; j++) {
@@ -65,14 +62,49 @@ function loadTable(puzzleOrig) { //loads the initial sudoku puzzle
         }
         tempStr += '</tr>';
     }
-    //alert('hi');
-    $('#puzzle').html(tempStr);
+    return tempStr;
+}
 
+function loadTable(puzzleOrig, level) { //loads the initial sudoku puzzle
+    var tempStr = array2HTML(puzzleOrig);
+    //var finalHTML = emptySquares(tempStr, level);
+
+    $('#puzzle').html(tempStr); // this is where the table is actually displayed
+    //$('#puzzle').css("display: none");
+    emptySquares(tempStr, level);
+
+} // display the table
+
+function emptySquares(initHTML, level) {
+    var sq2del = 35 + level * 5;
+    
+    var puzzle = Array(); // converts string of HTML text to array
+    $("table tr").each(function(i, v){
+        puzzle[i] = Array();
+        $(this).children('td').each(function(ii, vv){
+            puzzle[i][ii] = $(this).text();
+        }); 
+    })
+    
+    for (i = 0; i <= sq2del; i++) { //erasing spots at random
+        rows = parseInt(Math.random() * 9);
+        cols = parseInt(Math.random() * 9);
+        if (puzzle[rows][cols] === "") {
+            i -= 1;
+        }
+//        else {console.log(i + " (" + rows + ', ' + cols + ") value: " + 
+//                    puzzle[rows][cols]);}
+        puzzle[rows][cols] = "";
+    }
+    
+    var finalHTML = array2HTML(puzzle);
+    $('#puzzle').html(finalHTML);
+    return finalHTML;
 }
 
 function modifyPuzzle (puzzleOrig) {
     var newPuzzle = puzzleOrig;
-    for (iter = 0; iter < 10; iter ++) {
+    for (iter = 0; iter < 30; iter ++) {
         var randTransform = parseInt(Math.random() * 4);
         switch (randTransform) {
             case 0: //row swap within a subblock
@@ -142,12 +174,15 @@ function modifyPuzzle (puzzleOrig) {
         }
     }
     return newPuzzle;
-}
+} // randomize puzzle
 
 jQuery(document).ready(function($) {
     $('#new_puz').bind("click", function(e) {
-        var puz2load = modifyPuzzle(puzzleDefault);
-        loadTable(puz2load);
+        var level = $('input[name=diff]:checked').val(); //the selected level
+        var puz2load = modifyPuzzle(puzzleDefault); //randomize puzzle
+        
+        loadTable(puz2load, level);
+        
         $('#timer').find('.value_S').text('00');
         $('#timer').find('.value_M').text('00');
         $('#timer').find('.value_H').text('00');

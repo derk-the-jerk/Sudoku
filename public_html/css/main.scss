@@ -45,6 +45,9 @@ article {
 input {
     padding:4px;
 }
+#difficulty {
+    text-align: left;
+}
 
 #puzzle {
     border: 4px ridge #555;
@@ -53,8 +56,12 @@ input {
     margin: auto;
     float: none;
     text-align: center;
+    tr {
+        height: 39px;
+    }
     td {
+        width: 39px;
         border-spacing: 0px;
-        border: 1px solid black;
+        border: 1px dotted black;
     }
 }
