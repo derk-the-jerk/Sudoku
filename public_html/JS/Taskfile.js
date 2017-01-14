@@ -1,5 +1,4 @@
-//var timeUpdate; // = setInterval(updateDisplay, 1000); // every second call updateDisplay
-//loadTable();
+var timeUpdate; // = setInterval(updateDisplay, 1000); // every second call updateDisplay
 
 var puzzleDefault = [[5,3,4,6,7,8,9,1,2],
                  [6,7,2,1,9,5,3,4,8],
@@ -36,6 +35,17 @@ function updateDisplay(){ //run stopwatch
     if (value_h < 10) { $('#timer').find('.value_H').text('0' + value_h); }
     else {$('#timer').find('.value_H').text(value_h); }
 }//runs the stopwatch
+
+function HTML2array() {
+    var puzzle = Array(); // converts string of HTML text to array
+    $("table tr").each(function(i, v){
+        puzzle[i] = Array();
+        $(this).children('td').each(function(ii, vv){
+            puzzle[i][ii] = $(this).text();
+        }); 
+    });
+    return puzzle;
+}
 
 function array2HTML(puzzleOrig) {
     var tempStr = "";
@@ -96,13 +106,7 @@ function loadTable(puzzleOrig, level) { //loads the initial sudoku puzzle
 function emptySquares(initHTML, level) {
     var sq2del = 35 + level * 5;
     
-    var puzzle = Array(); // converts string of HTML text to array
-    $("table tr").each(function(i, v){
-        puzzle[i] = Array();
-        $(this).children('td').each(function(ii, vv){
-            puzzle[i][ii] = $(this).text();
-        }); 
-    });
+    var puzzle = HTML2array();
     
     for (i = 0; i <= sq2del; i++) { //erasing spots at random
         rows = parseInt(Math.random() * 9);
@@ -201,24 +205,87 @@ function playPuzzle() {
         $(this).addClass('focus');
         $(this).find('input').focus();
         var contents = $(this).find('input').text();
-        console.log(contents.toString());
+//        console.log(contents.toString());
     });
     
     $('.cell').keydown(function(e) {
         if(e.which === 9) {
-            console.log('tab');
+//            console.log('tab');
             $('.cell').removeClass('focus');
         //    $(document.activeElement).parent('.cell').next('input').addClass('focus');
         }
     });
     
-    $('input').change(function(e) { // listen for value inputted
-        //console.log($(this).val());
+    $('td input').change(function(e) { // listen for value inputted
         var txt = '<span>'+$(this).val()+'</span>';
         $(this).html('');
         $(this).append(txt);
+
+        // checking for duplicate values
+        var puzzle = HTML2array();
+        var row = $(this).parent('td').parent().index();
+        var col = $(this).parent('td').index();
+        var rowSub = parseInt(row / 3);
+        var colSub = parseInt(col / 3);
+        console.log("(" + row + ", " +col + ') value: ' + $(this).val());
+
+        //checking for conflicts in columns
+        for (var i = 0; i < puzzle.length; i++) {
+            if ((row !== i) && ($(this).val() === (puzzle[i][col])) && $(this).val() !== '') {
+                $(this).parent('td').addClass('dup');
+                $('#puzzle tr:nth-of-type('+(i+1)+') td:nth-of-type('+(col+1)+')').addClass('dup');
+            }
+        }
+
+        //checking for conflicts in boxes
+        for (var i = 0; i < 3; i++) {
+            for (var j = 0; j < 3; j++) {
+                row1 = rowSub * 3 + i;
+                col1 = colSub * 3 + j;
+                var diffCell = (col !== col1) || (row !== row1);
+                if ( diffCell && $(this).val() === puzzle[row1][col1] && $(this).val() !== '') {
+                    $(this).parent('td').addClass('dup');
+                    $('#puzzle tr:nth-of-type('+(row1+1)+') td:nth-of-type('+(col1+1)+')').addClass('dup');
+                }
+            }
+        }
+
+        //checking for conflicts in rows
+        for (var i = 0; i < puzzle[row].length; i++) {
+            if ((col !== i) && ($(this).val() === (puzzle[row][i])) && $(this).val() !== '') {
+                $(this).parent('td').addClass('dup');
+                $('#puzzle tr:nth-of-type('+(row+1)+') td:nth-of-type('+(i+1)+')').addClass('dup');
+            }
+        }
+
+        // check to see if puzzle is complete
+        var complete = true;
+        for (var i = 0; i < puzzle.length; i++) {
+            for (var j = 0; j < puzzle[i].length; j++) {
+                if (puzzle[i][j] === '') {
+                    complete = false;
+                }
+            }
+        }
+        if (complete) {
+            console.log("Congratulations!");
+            clearInterval(timeUpdate);
+            $('#complete').css('top','11.5vh');
+            $("#complete").css('transition','.5s');
+            $("#pause_resume").css('display','none');
+        }
+
+
     });
-    
+
+    $('.cell input').keydown(function(e) {
+        // listen for backspace to remove 'dup' class
+        if (e.which === 8) {
+            
+        }
+    });
+
+      //trying to get arrow key navigation to work 
 //    $('.cell input').keydown(function(e) {
 //        if(e.which === 13) {
 //            console.log('enter pressed');
@@ -245,9 +312,7 @@ function playPuzzle() {
     
 }
 
-jQuery(document).ready(function($) {
-    var timeUpdate;
-    
+jQuery(document).ready(function($) { 
     //hide pause button until 1st puzzle loads
     $("#pause_resume").css('display','none');
     
@@ -272,7 +337,6 @@ jQuery(document).ready(function($) {
     $('#pause_resume').bind("click", function(e) { // PAUSE BUTTON
         if ($("#pause_resume").val() === "Pause") { 
             // clock is going
-            //$("#overlay").css('z-index',2);
             $('#overlay').css('top','11.5vh');
             $("#overlay").css('transition','.5s');
             $("#overlay").css('background.color', 'red');
