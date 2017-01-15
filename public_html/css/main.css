@@ -42,6 +42,27 @@ nav {
     font-size: 14px;
     margin: 0 0 8px 0; }
 
+#sidebar {
+  position: absolute;
+  right: 80vw;
+  vertical-align: middle;
+  font-size: 6px;
+}
+
+#sidebar div {
+  display: inline-block;
+  height: 30px;
+  width: 30px;
+  font-size: 14px;
+}
+
+#sidebar div h3 {
+  text-align: center;
+  border: 2px ridge black;
+  border-radius: 50%;
+  padding: 4px;
+}
+
 article {
   margin-top: 100px; }
 
@@ -55,7 +76,7 @@ input {
   background-color: var(--focus-bg); }
 
 #overlay {
-  top: 11.5vh;
+  top: 12.5vh;
   background-color: rgba(255, 0, 0, 0.9); }
 
 #complete {
