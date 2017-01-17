@@ -1,5 +1,6 @@
-//var timeUpdate; // = setInterval(updateDisplay, 1000); // every second call updateDisplay
-//loadTable();
+var timeUpdate; // = setInterval(updateDisplay, 1000); // every second call 
+
+updateDisplay
 
 var puzzleDefault = [[5,3,4,6,7,8,9,1,2],
                  [6,7,2,1,9,5,3,4,8],
@@ -18,12 +19,12 @@ function updateDisplay(){ //run stopwatch
     var value_h = parseInt($('#timer').find('.value_H').text(), 10);
     
     // roll over to a new minute after 60 seconds
-    if (value_s > 59) {
+    if (value_s >= 59) {
         value_s = value_s - 60;
         value_m ++;
     }
         // roll over to a new hour after 60 minutes
-    if (value_m > 59) {
+    if (value_m >= 59) {
         value_m = value_m - 60;
         value_h ++;
     }
@@ -37,6 +38,66 @@ function updateDisplay(){ //run stopwatch
     else {$('#timer').find('.value_H').text(value_h); }
 }//runs the stopwatch
 
+function newPuzzle() {
+    $("#pause_resume").css('display','inline-block');
+    $('#overlay').css('top','-400px');
+    $('#complete').css('top','-400px');
+    $("#overlay").css('transition','.5s');
+    var level = $('input[name=diff]:checked').val(); //the selected level
+    var puz2load = modifyPuzzle(puzzleDefault); //randomize puzzle
+    
+    loadTable(puz2load, level);//delete values and display the puzzle
+    playPuzzle();
+     
+    $('#timer').find('.value_S').text('00');
+    $('#timer').find('.value_M').text('00');
+    $('#timer').find('.value_H').text('00');
+    clearInterval(timeUpdate);
+    $("#pause_resume").val("Pause");
+    timeUpdate = setInterval(updateDisplay, 1000);
+}
+
+function hitPause() {
+    $("#pause_resume").focus();
+    if ($("#pause_resume").val() === "Pause") { 
+        // clock is going
+        $('#overlay').css('top','11.5vh');
+        $("#overlay").css('transition','.5s');
+        $("#overlay").css('background.color', 'red');
+        $("#pause_resume").val("Resume");
+        clearInterval(timeUpdate);
+    }
+    else { // already in the pause state
+        $("#pause_resume").val("Pause");
+        $("#overlay").css('top', '-400px');
+        timeUpdate = setInterval(updateDisplay, 1000);
+    }
+}
+
+function updateCount() {
+    var txt = $('#puzzle').text();
+    for (var i = 1; i <= 9; i++ ) {
+        var count = txt.split(i).length - 1;
+        $('#sidebar div').find(i).html('<span>'+count+'</span>');
+        //$('#sidebar div:contains(1)').css('bacground-color','red');
+    }
+}
+
+function validChar (key2test) {
+    return "123456789".indexOf( String.fromCharCode(key2test) ) >= 0;
+}
+
+function HTML2array() {
+    var puzzle = Array(); // converts string of HTML text to array
+    $("table tr").each(function(i, v){
+        puzzle[i] = Array();
+        $(this).children('td').each(function(ii, vv){
+            puzzle[i][ii] = $(this).text();
+        }); 
+    });
+    return puzzle;
+}
+
 function array2HTML(puzzleOrig) {
     var tempStr = "";
     
@@ -45,7 +106,9 @@ function array2HTML(puzzleOrig) {
         for (var j=0; j<puzzleOrig[i].length; j++) {
             var tmp = "<input type='text' maxlength='1'></input>";
             if ((i === 2 || i === 5) && (j === 2 || j === 5)) {
-                tempStr += '<td class="cell" style="border-bottom:2px solid black;';
+                tempStr += '<td class="cell" style="border-bottom:2px solid 
+
+black;';
                 tempStr += 'border-right:2px solid black;">';
                 if (puzzleOrig[i][j] === "") {
                     tempStr += tmp;
@@ -54,7 +117,9 @@ function array2HTML(puzzleOrig) {
                 tempStr += '</td>';
             }
             else if (i === 2 || i === 5) {
-                tempStr += '<td class="cell" style="border-bottom:2px solid black;">';
+                tempStr += '<td class="cell" style="border-bottom:2px solid 
+
+black;">';
                 if (puzzleOrig[i][j] === "") {
                     tempStr += tmp;
                 }
@@ -62,7 +127,9 @@ function array2HTML(puzzleOrig) {
                 tempStr += '</td>';
             }
             else if (j === 2 || j === 5) {
-                tempStr += '<td class="cell" style="border-right:2px solid black;">';
+                tempStr += '<td class="cell" style="border-right:2px solid 
+
+black;">';
                 if (puzzleOrig[i][j] === "") {
                     tempStr += tmp;
                 }
@@ -87,22 +154,18 @@ function loadTable(puzzleOrig, level) { //loads the initial sudoku puzzle
     var tempStr = array2HTML(puzzleOrig);
     //var finalHTML = emptySquares(tempStr, level);
 
-    $('#puzzle').html(tempStr); // this is where the table is actually displayed
+    $('#puzzle').html(tempStr); // this is where the table is actually 
+
+displayed
     //$('#puzzle').css("display: none");
     emptySquares(tempStr, level);
 
 } // display the table
 
 function emptySquares(initHTML, level) {
-    var sq2del = 35 + level * 5;
+    var sq2del = 36 + level * 4;
     
-    var puzzle = Array(); // converts string of HTML text to array
-    $("table tr").each(function(i, v){
-        puzzle[i] = Array();
-        $(this).children('td').each(function(ii, vv){
-            puzzle[i][ii] = $(this).text();
-        }); 
-    });
+    var puzzle = HTML2array();
     
     for (i = 0; i <= sq2del; i++) { //erasing spots at random
         rows = parseInt(Math.random() * 9);
@@ -110,8 +173,6 @@ function emptySquares(initHTML, level) {
         if (puzzle[rows][cols] === "") {
             i -= 1;
         }
-//        else {console.log(i + " (" + rows + ', ' + cols + ") value: " + 
-//                    puzzle[rows][cols]);}
         puzzle[rows][cols] = '';
     }
     
@@ -127,8 +188,12 @@ function modifyPuzzle (puzzleOrig) {
         switch (randTransform) {
             case 0: //row swap within a subblock
                 var randSubBlock = parseInt(Math.random() * 3); // sub block
-                var row1 = parseInt(Math.random() * 3) + randSubBlock*3; // row to switch
-                var row2 = parseInt(Math.random() * 3) + randSubBlock*3; // row to switch
+                var row1 = parseInt(Math.random() * 3) + randSubBlock*3; // 
+
+row to switch
+                var row2 = parseInt(Math.random() * 3) + randSubBlock*3; // 
+
+row to switch
                 if (row1 === row2) {
                     row1 = (row1 + 1) % 3 + randSubBlock * 3;
                 }
@@ -158,8 +223,12 @@ function modifyPuzzle (puzzleOrig) {
 
             case 2: //swap columns within sub block
                 var randSubBlock = parseInt(Math.random() * 3); // sub block
-                var col1 = parseInt(Math.random() * 3) + randSubBlock*3; // row to switch
-                var col2 = parseInt(Math.random() * 3) + randSubBlock*3; // row to switch
+                var col1 = parseInt(Math.random() * 3) + randSubBlock*3; // 
+
+row to switch
+                var col2 = parseInt(Math.random() * 3) + randSubBlock*3; // 
+
+row to switch
                 if (col1 === col2) {
                     col1 = (col1 + 1) % 3 + randSubBlock * 3;
                 }
@@ -201,24 +270,116 @@ function playPuzzle() {
         $(this).addClass('focus');
         $(this).find('input').focus();
         var contents = $(this).find('input').text();
-        console.log(contents.toString());
+//        console.log(contents.toString());
     });
     
     $('.cell').keydown(function(e) {
         if(e.which === 9) {
-            console.log('tab');
+//            console.log('tab');
             $('.cell').removeClass('focus');
-        //    $(document.activeElement).parent('.cell').next('input').addClass('focus');
+        //    $(document.activeElement).parent('.cell').next
+
+('input').addClass('focus');
         }
     });
     
-    $('input').change(function(e) { // listen for value inputted
-        //console.log($(this).val());
+    $('td input').change(function(e) { // listen for value inputted
         var txt = '<span>'+$(this).val()+'</span>';
         $(this).html('');
         $(this).append(txt);
+
+        updateCount(); // update the count for each number
+
+        // checking for duplicate values
+        var puzzle = HTML2array();
+        var row = $(this).parent('td').parent().index();
+        var col = $(this).parent('td').index();
+        var rowSub = parseInt(row / 3);
+        var colSub = parseInt(col / 3);
+        console.log("(" + row + ", " +col + ') value: ' + $(this).val());
+
+        //checking for conflicts in columns
+        for (var i = 0; i < puzzle.length; i++) {
+            if ((row !== i) && ($(this).val() === (puzzle[i][col])) && 
+
+$(this).val() !== '') {
+                $(this).parent('td').addClass('dup');
+                $('#puzzle tr:nth-of-type('+(i+1)+') td:nth-of-type('+(col
+
++1)+')').addClass('dup');
+            }
+        }
+
+        //checking for conflicts in boxes
+        for (var i = 0; i < 3; i++) {
+            for (var j = 0; j < 3; j++) {
+                row1 = rowSub * 3 + i;
+                col1 = colSub * 3 + j;
+                var diffCell = (col !== col1) || (row !== row1);
+                if ( diffCell && $(this).val() === puzzle[row1][col1] && 
+
+$(this).val() !== '') {
+                    $(this).parent('td').addClass('dup');
+                    $('#puzzle tr:nth-of-type('+(row1+1)+') td:nth-of-type
+
+('+(col1+1)+')').addClass('dup');
+                }
+            }
+        }
+
+        //checking for conflicts in rows
+        for (var i = 0; i < puzzle[row].length; i++) {
+            if ((col !== i) && ($(this).val() === (puzzle[row][i])) && 
+
+$(this).val() !== '') {
+                $(this).parent('td').addClass('dup');
+                $('#puzzle tr:nth-of-type('+(row+1)+') td:nth-of-type('+(i
+
++1)+')').addClass('dup');
+            }
+        }
+
+        // check to see if puzzle is complete
+        var complete = true;
+        for (var i = 0; i < puzzle.length; i++) {
+            for (var j = 0; j < puzzle[i].length; j++) {
+                if (puzzle[i][j] === '') {
+                    complete = false;
+                }
+            }
+        }
+        if (complete) {
+            console.log("Congratulations!");
+            clearInterval(timeUpdate);
+            $('#complete').css('top','11.5vh');
+            $("#complete").css('transition','.5s');
+            $("#pause_resume").css('display','none');
+        }
     });
-    
+
+    $('.cell input').keydown(function(e) {
+        // test for a valid input in the input fields
+        var valid = validChar(e.which);
+        
+        if (!valid) {
+            if (e.which === 8) { // listening for backspace
+            }
+            else if (e.which === 9) {} // listening for tab
+            else if (e.which === 80) { // listening for 'p'
+                hitPause();
+                return false;
+            }
+            else if (e.which === 78) { // listening for 'n'
+                newPuzzle();
+                return false;
+            }
+            else {
+                return false;
+            }
+        }
+    });
+
+      //trying to get arrow key navigation to work 
 //    $('.cell input').keydown(function(e) {
 //        if(e.which === 13) {
 //            console.log('enter pressed');
@@ -245,44 +406,24 @@ function playPuzzle() {
     
 }
 
-jQuery(document).ready(function($) {
-    var timeUpdate;
-    
+jQuery(document).ready(function($) { 
     //hide pause button until 1st puzzle loads
     $("#pause_resume").css('display','none');
     
     $('#new_puz').bind("click", function(e) { // NEW PUZZLE BUTTON
-        $("#pause_resume").css('display','inline-block');
-        $('#overlay').css('top','-400px');
-         $("#overlay").css('transition','.5s');
-        var level = $('input[name=diff]:checked').val(); //the selected level
-        var puz2load = modifyPuzzle(puzzleDefault); //randomize puzzle
-        
-        loadTable(puz2load, level);//delete values and display the puzzle
-        playPuzzle();
-        
-        $('#timer').find('.value_S').text('00');
-        $('#timer').find('.value_M').text('00');
-        $('#timer').find('.value_H').text('00');
-        clearInterval(timeUpdate);
-        $("#pause_resume").val("Pause");
-        timeUpdate = setInterval(updateDisplay, 1000);
+        newPuzzle();
     }); // NEW PUZZLE BUTTON
     
-    $('#pause_resume').bind("click", function(e) { // PAUSE BUTTON
-        if ($("#pause_resume").val() === "Pause") { 
-            // clock is going
-            //$("#overlay").css('z-index',2);
-            $('#overlay').css('top','11.5vh');
-            $("#overlay").css('transition','.5s');
-            $("#overlay").css('background.color', 'red');
-            $("#pause_resume").val("Resume");
-            clearInterval(timeUpdate);
+    $('#pause_resume').bind("click", function(e) {
+        hitPause();
+    });// PAUSE BUTTON
+
+    $('body').keydown(function (e) {
+        if( e.which === 80 ) {
+            hitPause();
         }
-        else { // already in the pause state
-            $("#pause_resume").val("Pause");
-            $("#overlay").css('top', '-400px');
-            timeUpdate = setInterval(updateDisplay, 1000);
+        else if (e.which === 78 ) {
+            newPuzzle();
         }
-    }); // STOPWATCH
+    });
 });
