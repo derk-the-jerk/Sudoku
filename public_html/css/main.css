@@ -9,9 +9,12 @@ and open the template in the editor.
 */
 :root {
   --page-bg: #F3F3F3;
-  --focus-bg: #DADFED; 
+  --focus-bg: #DADFED;
   --dup-bg: #FF6666;
-}
+  --nav-bg: #D9ECFF;
+  --count-green: #2FBA2F;
+  --count-red: #EB4444;
+  --count: #4682BD; }
 
 html, body {
   background-color: var(--page-bg);
@@ -25,6 +28,45 @@ header {
   top: 0;
   text-align: center;
   height: 12vh; }
+  header #help {
+    background-color: #6666FF;
+    cursor: pointer;
+    position: absolute;
+    right: 3vh;
+    top: 3vh;
+    width: 22px;
+    font-size: 16px;
+    font-weight: bolder;
+    border: 2px outset #94CAFF;
+    border-radius: 50%; }
+    header #help #help:active {
+      background-color: red; }
+
+#help_text {
+  padding: 4px;
+  display: none;
+  position: relative;
+  width: 60%;
+  margin: auto;
+  background: #6666FF;
+  z-index: 5;
+  border: 2px outset #94CAFF;
+  border-radius: 5px; }
+  #help_text p {
+    text-align: justify; }
+  #help_text #exit {
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 3px;
+    background-color: #9494FF;
+    border: 2px outset #94CAFF;
+    position: absolute;
+    width: 20px;
+    top: 5px;
+    right: 5px; }
+
+#new_puz, #pause_resume {
+  cursor: pointer; }
 
 nav {
   z-index: 3;
@@ -33,9 +75,10 @@ nav {
   top: 14vh;
   right: 2.5vh;
   text-align: center;
-  background-color: #f2f2f2;
+  background-color: var(--nav-bg);
   padding: 16px;
-  border: solid 1px #e5e5e5;
+  border: 2px outset #AFC6DB;
+  border-radius: 2px;
   text-align: center;
   margin: 0 0 16px 0; }
   nav h2 {
@@ -44,24 +87,35 @@ nav {
 
 #sidebar {
   position: absolute;
+  top: 13vh;
   right: 80vw;
-  vertical-align: middle;
-  font-size: 6px;
-}
-
-#sidebar div {
-  display: inline-block;
-  height: 30px;
-  width: 30px;
-  font-size: 14px;
-}
-
-#sidebar div h3 {
-  text-align: center;
-  border: 2px ridge black;
-  border-radius: 50%;
-  padding: 4px;
-}
+  vertical-align: middle; }
+  #sidebar div {
+    background: var(--nav-bg);
+    border: 2px outset #AFC6DB;
+    border-radius: 50%;
+    display: inline-block;
+    height: 15px;
+    width: 35px;
+    padding-top: 10px;
+    padding-bottom: 10px; }
+    #sidebar div p {
+      position: relative;
+      left: 7px;
+      top: -5px;
+      display: inline;
+      font-size: 22px;
+      font-weight: bolder;
+      text-align: center;
+      padding-top: 0px; }
+    #sidebar div span {
+      position: relative;
+      right: -7px;
+      top: -15px;
+      color: var(--count);
+      /*text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;*/
+      font-size: 16px;
+      font-weight: bold; }
 
 article {
   margin-top: 100px; }
@@ -71,11 +125,22 @@ input {
 
 #difficulty {
   text-align: left; }
+  #difficulty input {
+    cursor: pointer; }
 
 .focus {
   background-color: var(--focus-bg); }
 
 #overlay {
+  display: none;
+  position: absolute;
+  top: 0;
+  z-index: 4;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); }
+
+#pause {
   top: 12.5vh;
   background-color: rgba(255, 0, 0, 0.9); }
 
@@ -83,28 +148,28 @@ input {
   top: -400px;
   background-color: rgba(100, 255, 100, 0.9); }
 
-#overlay, #complete {
-  position: absolute;  
+#pause, #complete {
+  position: absolute;
   left: 0;
   z-index: 2;
   height: 400px;
   width: 100vw; }
-  #overlay div, #complete div {
+  #pause div, #complete div {
     width: 425px;
     height: 50%;
     text-align: center;
     margin: auto;
     vertical-align: middle; }
-    #overlay div h1, #complete div h1 {
+    #pause div h1, #complete div h1 {
       margin-top: 1em;
       font-size: 3em; }
 
 .dup {
-  background-color: var(--dup-bg);
-}
+  background-color: var(--dup-bg); }
 
 #puzzle {
-  border: 4px ridge #555;
+  border: 4px outset #555;
+  border-radius: 10px;
   height: 360px;
   width: 360px;
   margin: auto;
@@ -125,5 +190,9 @@ input {
       height: 20px;
       text-align: center;
       border: 0px; }
+
+#footer {
+  position: absolute;
+  bottom: 5px; }
 
 /*# sourceMappingURL=main.css.map */
