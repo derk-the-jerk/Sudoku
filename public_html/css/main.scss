@@ -9,99 +9,218 @@ and open the template in the editor.
 */
 
 :root {
-    --page-bg: #F3F3F3;
-    --focus-bg: #DADFED;
+  --page-bg: #F3F3F3;
+  --focus-bg: #DADFED;
+  --dup-bg: #FF6666;
+  --nav-bg: #D9ECFF;
+  --count-green: #2FBA2F;
+  --count-red: #EB4444;
+  --count: #4682BD;
 }
 
 html, body {
-    background-color: var(--page-bg);
-    padding: 0;
-    margin: 0;
-    font-family: "Open Sans", sans-serif;
+  background-color: var(--page-bg);
+  padding: 0;
+  margin: 0;
+  font-family: "Open Sans", sans-serif;
 }
 
 header {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  text-align: center;
+  height: 12vh;
+  #help {
+    background-color: #6666FF;
+    cursor: pointer;
     position: absolute;
-    width: 100%;
-    top: 0;
-    text-align: center;
-    height: 12vh;
-}
-nav {
-    z-index: 3;
-    position: absolute;
-    width: 15%;
-    top: 14vh;
-    right: 2.5vh;
-    text-align: center;
-    background-color:#f2f2f2;
-    padding:16px;
-    border:solid 1px #e5e5e5;
-    text-align:center;
-    margin:0 0 16px 0;
-    h2 {
-        font-size:14px;
-        margin:0 0 8px 0;
+    right: 3vh;
+    top: 3vh;
+    width: 22px;
+    font-size: 16px;
+    font-weight: bolder;
+    border: 2px outset #94CAFF;
+    border-radius: 50%;
+    #help:active {
+      background-color: red;
     }
+  }
+}
+
+#help_text {
+  padding: 4px;
+  display: none;
+  position: relative;
+  width: 60%;
+  margin: auto;
+  background: #6666FF;
+  z-index: 5;
+  border: 2px outset #94CAFF;
+  border-radius: 5px;
+  p {text-align: justify;}
+  #exit {
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 3px;
+    background-color: #9494FF;
+    border: 2px outset #94CAFF;
+    position: absolute;
+    width: 20px;
+    top: 5px;
+    right: 5px;
+  }
+}
+
+#new_puz, #pause_resume {
+  cursor: pointer;
+}
+
+nav {
+  z-index: 3;
+  position: absolute;
+  width: 15%;
+  top: 14vh;
+  right: 2.5vh;
+  text-align: center;
+  background-color: var(--nav-bg);
+  padding: 16px;
+  border: 2px outset #AFC6DB;
+  border-radius: 2px;
+  text-align: center;
+  margin: 0 0 16px 0; 
+  h2 {
+    font-size:14px;
+    margin:0 0 8px 0;
+  }
+}
+
+#sidebar {
+  position: absolute;
+  top: 13vh;
+  right: 80vw;
+  vertical-align: middle;
+  div {
+    background: var(--nav-bg);
+    border: 2px outset #AFC6DB;
+    border-radius: 50%;
+    display: inline-block;
+    height: 15px;
+    width: 35px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    p {
+      position: relative;
+      left: 7px;
+      top: -5px;
+      display: inline;
+      font-size: 22px;
+      font-weight: bolder;
+      text-align: center;
+      padding-top: 0px;
+    }
+    span {
+      position: relative;
+      right: -7px;
+      top: -15px;
+      color: var(--count);
+      /*text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;*/
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
 }
 
 article {
-    margin-top: 100px;
+  margin-top: 100px;
 }
 
 input {
-    padding:4px;
+  padding:4px;
 }
 #difficulty {
-    text-align: left;
+  text-align: left;
+  input {
+    cursor: pointer;
+  }
 }
 
 .focus {
-    background-color: var(--focus-bg);
+  background-color: var(--focus-bg);
 }
 
 #overlay {
-    background-color: rgba(255,0,0,0.9);
-    position: absolute;
-    top: 11.5vh;
-    left: 0;
-    z-index: 2;
-    height: 400px;
-    width: 100vw;
-    div {
-        width: 425px;
-        height: 50%;
-        text-align: center;
-        margin: auto;
-        vertical-align: middle;
-        h1 {
-            margin-top: 1em;
-            font-size: 3em;
-        }
+  display: none;
+  position: absolute;
+  top: 0;
+  z-index: 4;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,.5); 
+}
+
+#pause {
+  top: 12.5vh;
+  background-color: rgba(255,0,0,0.9);
+}
+
+#complete {
+  top: -400px;
+  background-color: rgba(100, 255, 100, 0.9);
+}
+
+#pause, #complete {
+  position: absolute;
+  left: 0;
+  z-index: 2;
+  height: 400px;
+  width: 100vw;
+  div {
+    width: 425px;
+    height: 50%;
+    text-align: center;
+    margin: auto;
+    vertical-align: middle;
+    h1 {
+      margin-top: 1em;
+      font-size: 3em;
     }
+  }
+}
+
+.dup {
+  background-color: var(--dup-bg);
 }
 
 #puzzle {
-    border: 4px ridge #555;
-    height: 360px;
-    width: 360px;
-    margin: auto;
-    float: none;
-    text-align: center;
-    tr {
-        height: 39px;
+  border: 4px outset #555;
+  border-radius: 10px;
+  height: 360px;
+  width: 360px;
+  margin: auto;
+  float: none;
+  text-align: center;
+  tr {
+    height: 39px;
+  }
+  td {
+    font-weight: bolder;
+    width: 39px;
+    border-spacing: 0px;
+    border: 1px dotted black;
+    input {
+      background-color: var(--page-bg);
+      border-radius: 30%;
+      font-size: 16px;
+      width: 20px;
+      height: 20px;
+      text-align: center;
+      border: 0px;
     }
-    td {
-        font-weight: bolder;
-        width: 39px;
-        border-spacing: 0px;
-        border: 1px dotted black;
-        input {
-            background-color: var(--page-bg);
-            font-size: 16px;
-            width: 10px;
-            text-align: center;
-            border: 0px;
-        }
-    }
+  }
+}
+
+#footer {
+  position: absolute;
+  bottom: 5px;
 }
