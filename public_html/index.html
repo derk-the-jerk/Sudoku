@@ -5,65 +5,72 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 <html>
-    <head>
-        <title>Sudoku</title>
-        <meta charset="UTF-8">
-   <!--     <link href="https://fonts.googleapis.com/css?family=Open+Sans" 
+  <head>
+    <title>Sudoku</title>
+    <meta charset="UTF-8">
+   <!--     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">   -->
+    <link href="css/main.css" type="text/css" rel="stylesheet">
+    <link rel="icon" href="images/icon.png">
+    <script src="jquery-3.1.1.js"></script>
+    <script src="JS/Taskfile.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+    <div id="overlay"></div>
+    <div id="pause">
+      <div><h1>No cheating! Please make a selection to the right.</h1></div>
+    </div>
+    <div id="complete">
+      <div><h1>Congratulations!</h1></div>
+    </div>
+    <header>
+      <h1>Sudoku Puzzle</h1>
+      <div id ='help' onmouseover="this.style.background='#9E9EFF';" 
+           onmouseout="this.style.background='#9494FF';">?</div>
+      <div id='help_text'>
+        <h2>Help</h2><div id="exit" onmouseover="this.style.background='#9E9EFF';" 
+           onmouseout="this.style.background='#9494FF';">X</div>
+        <p>The aim of Sudoku is to fill out the 9x9 grid below with the numbers 
+          1-9. Each box, row, and column should contain each number only once.</p>
+        <p>Use the keyboard to input values, and the counts to the left of the 
+          board will update.</p>
+        <p>You can use 'p' to pause the game, or 'n' to start a new game.</p>
+        <p>Thanks for playing!</p>
+      </div>
+    </header>
 
-rel="stylesheet">   -->
-        <link href="css/main.css" type="text/css" rel="stylesheet">
-        <link rel="icon" href="images/icon.png">
-        <script src="jquery-3.1.1.js"></script>
-        <script src="JS/Taskfile.js"></script>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div id="overlay">
-            <div>
-                <h1>No Cheating! Please make a selection to the right.</h1>
-            </div>
-        </div>
-        <div id="complete">
-            <div>
-                <h1>Congratulations!</h1>
-            </div>
-        </div>
-        <header>
-            <h1>Sudoku Puzzle</h1>
-        </header>
-        <div id = "sidebar">
-          <div><h3>1</h3></div><br />
-          <div><h3>2</h3></div><br />
-          <div><h3>3</h3></div><br />
-          <div><h3>4</h3></div><br />
-          <div><h3>5</h3></div><br />
-          <div><h3>6</h3></div><br />
-          <div><h3>7</h3></div><br />
-          <div><h3>8</h3></div><br />
-          <div><h3>9</h3></div><br />
-        </div>
-        <nav>
-            <h2>Stopwatch</h2>
-            <div id="timer">
-                <span class="value_H">00</span>:
-                <span class="value_M">00</span>:
-                <span class="value_S">00</span>
-            </div>
-            <input type="button" value="New Puzzle" id="new_puz" />
-            <input type="button" value="Pause" id="pause_resume" />
-            <br /><br />
-            <h2>Difficulty</h2>
-            <div id="difficulty">
-                <input type="radio" name="diff" value="1" checked>Easy<br>
-                <input type="radio" name="diff" value="2">Medium<br>
-                <input type="radio" name="diff" value="3">Hard<br>
-                <input type="radio" name="diff" value="4">Expert<br>
-            </div>
-        </nav>
-        <article>
-            <table id="puzzle" cellspacing="0">
-            </table>
-        </article>
-        <div id="footer"></div>
+    <div id = "sidebar">
+      <div><p>1</p></div><br />
+      <div><p>2</p></div><br />
+      <div><p>3</p></div><br />
+      <div><p>4</p></div><br />
+      <div><p>5</p></div><br />
+      <div><p>6</p></div><br />
+      <div><p>7</p></div><br />
+      <div><p>8</p></div><br />
+      <div><p>9</p></div><br />
+    </div>
+    <nav>
+      <h2>Stopwatch</h2>
+      <div id="timer">
+        <span class="value_H">00</span>:
+        <span class="value_M">00</span>:
+        <span class="value_S">00</span>
+      </div>
+      <input type="button" value="New Puzzle" id="new_puz" />
+      <input type="button" value="Pause" id="pause_resume" />
+      <br /><br />
+      <h2>Difficulty</h2>
+      <div id="difficulty">
+        <input type="radio" name="diff" value="1" checked>Easy<br>
+        <input type="radio" name="diff" value="2">Medium<br>
+        <input type="radio" name="diff" value="3">Hard<br>
+        <input type="radio" name="diff" value="4">Expert<br>
+      </div>
+    </nav>
+    <article>
+      <table id="puzzle" cellspacing="0"></table>
+    </article>
+      <div id="footer">&copy 2017 DGW</div>
     </body>
 </html>
