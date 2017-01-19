@@ -106,9 +106,7 @@ function array2HTML(puzzleOrig) {
         for (var j=0; j<puzzleOrig[i].length; j++) {
             var tmp = "<input type='text' maxlength='1'></input>";
             if ((i === 2 || i === 5) && (j === 2 || j === 5)) {
-                tempStr += '<td class="cell" style="border-bottom:2px solid 
-
-black;';
+                tempStr += '<td class="cell" style="border-bottom:2px solid black;';
                 tempStr += 'border-right:2px solid black;">';
                 if (puzzleOrig[i][j] === "") {
                     tempStr += tmp;
@@ -117,9 +115,7 @@ black;';
                 tempStr += '</td>';
             }
             else if (i === 2 || i === 5) {
-                tempStr += '<td class="cell" style="border-bottom:2px solid 
-
-black;">';
+                tempStr += '<td class="cell" style="border-bottom:2px solid black;">';
                 if (puzzleOrig[i][j] === "") {
                     tempStr += tmp;
                 }
@@ -127,9 +123,7 @@ black;">';
                 tempStr += '</td>';
             }
             else if (j === 2 || j === 5) {
-                tempStr += '<td class="cell" style="border-right:2px solid 
-
-black;">';
+                tempStr += '<td class="cell" style="border-right:2px solid black;">';
                 if (puzzleOrig[i][j] === "") {
                     tempStr += tmp;
                 }
@@ -154,9 +148,7 @@ function loadTable(puzzleOrig, level) { //loads the initial sudoku puzzle
     var tempStr = array2HTML(puzzleOrig);
     //var finalHTML = emptySquares(tempStr, level);
 
-    $('#puzzle').html(tempStr); // this is where the table is actually 
-
-displayed
+    $('#puzzle').html(tempStr); // this is where the table is actually displayed
     //$('#puzzle').css("display: none");
     emptySquares(tempStr, level);
 
@@ -188,12 +180,8 @@ function modifyPuzzle (puzzleOrig) {
         switch (randTransform) {
             case 0: //row swap within a subblock
                 var randSubBlock = parseInt(Math.random() * 3); // sub block
-                var row1 = parseInt(Math.random() * 3) + randSubBlock*3; // 
-
-row to switch
-                var row2 = parseInt(Math.random() * 3) + randSubBlock*3; // 
-
-row to switch
+                var row1 = parseInt(Math.random() * 3) + randSubBlock*3; // row to switch
+                var row2 = parseInt(Math.random() * 3) + randSubBlock*3; // row to switch
                 if (row1 === row2) {
                     row1 = (row1 + 1) % 3 + randSubBlock * 3;
                 }
@@ -223,12 +211,8 @@ row to switch
 
             case 2: //swap columns within sub block
                 var randSubBlock = parseInt(Math.random() * 3); // sub block
-                var col1 = parseInt(Math.random() * 3) + randSubBlock*3; // 
-
-row to switch
-                var col2 = parseInt(Math.random() * 3) + randSubBlock*3; // 
-
-row to switch
+                var col1 = parseInt(Math.random() * 3) + randSubBlock*3; // row to switch
+                var col2 = parseInt(Math.random() * 3) + randSubBlock*3; // row to switch
                 if (col1 === col2) {
                     col1 = (col1 + 1) % 3 + randSubBlock * 3;
                 }
@@ -300,13 +284,9 @@ function playPuzzle() {
 
         //checking for conflicts in columns
         for (var i = 0; i < puzzle.length; i++) {
-            if ((row !== i) && ($(this).val() === (puzzle[i][col])) && 
-
-$(this).val() !== '') {
+            if ((row !== i) && ($(this).val() === (puzzle[i][col])) && $(this).val() !== '') {
                 $(this).parent('td').addClass('dup');
-                $('#puzzle tr:nth-of-type('+(i+1)+') td:nth-of-type('+(col
-
-+1)+')').addClass('dup');
+                $('#puzzle tr:nth-of-type('+(i+1)+') td:nth-of-type('+(col+1)+')').addClass('dup');
             }
         }
 
@@ -316,26 +296,18 @@ $(this).val() !== '') {
                 row1 = rowSub * 3 + i;
                 col1 = colSub * 3 + j;
                 var diffCell = (col !== col1) || (row !== row1);
-                if ( diffCell && $(this).val() === puzzle[row1][col1] && 
-
-$(this).val() !== '') {
+                if ( diffCell && $(this).val() === puzzle[row1][col1] && $(this).val() !== '') {
                     $(this).parent('td').addClass('dup');
-                    $('#puzzle tr:nth-of-type('+(row1+1)+') td:nth-of-type
-
-('+(col1+1)+')').addClass('dup');
+                    $('#puzzle tr:nth-of-type('+(row1+1)+') td:nth-of-type('+(col1+1)+')').addClass('dup');
                 }
             }
         }
 
         //checking for conflicts in rows
         for (var i = 0; i < puzzle[row].length; i++) {
-            if ((col !== i) && ($(this).val() === (puzzle[row][i])) && 
-
-$(this).val() !== '') {
+            if ((col !== i) && ($(this).val() === (puzzle[row][i])) && $(this).val() !== '') {
                 $(this).parent('td').addClass('dup');
-                $('#puzzle tr:nth-of-type('+(row+1)+') td:nth-of-type('+(i
-
-+1)+')').addClass('dup');
+                $('#puzzle tr:nth-of-type('+(row+1)+') td:nth-of-type('+(i+1)+')').addClass('dup');
             }
         }
 
