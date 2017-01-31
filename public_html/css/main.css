@@ -8,19 +8,22 @@ and open the template in the editor.
     Author     : Derek
 */
 :root {
-  --page-bg: #F3F3F3;
-  --focus-bg: #DADFED;
+  --page-bg: #373E94;
+  --focus-bg: #EDBBED;
   --dup-bg: #FF6666;
   --nav-bg: #D9ECFF;
   --count-green: #2FBA2F;
   --count-red: #EB4444;
-  --count: #4682BD; }
+  --count: #4682BD;
+  --main-text: #333;
+  --puz-bg: #CEEDCE; }
 
 html, body {
   background-color: var(--page-bg);
   padding: 0;
   margin: 0;
-  font-family: "Open Sans", sans-serif; }
+  font-family: "Open Sans", sans-serif;
+  color: var(--main-text); }
 
 header {
   position: absolute;
@@ -41,12 +44,17 @@ header {
     border-radius: 50%; }
     header #help #help:active {
       background-color: red; }
+  header h1 {
+    color: #ccc; }
 
 #help_text {
   padding: 4px;
   display: none;
   position: relative;
-  width: 60%;
+  max-width: 500px;
+  min-width: 200px;
+  max-height: 80vh;
+  overflow: auto;
   margin: auto;
   background: #6666FF;
   z-index: 5;
@@ -54,6 +62,16 @@ header {
   border-radius: 5px; }
   #help_text p {
     text-align: justify; }
+  #help_text h4 {
+    padding: 0px;
+    line-height: 10px;
+    text-align: left; }
+  #help_text .nospace {
+    padding: 0px;
+    line-height: 10%; }
+    #help_text .nospace span {
+      font-family: Courier;
+      font-weight: bolder; }
   #help_text #exit {
     cursor: pointer;
     font-weight: bold;
@@ -142,11 +160,11 @@ input {
 
 #pause {
   top: 12.5vh;
-  background-color: rgba(255, 0, 0, 0.9); }
+  background-color: rgba(157, 204, 252, 0.9); }
 
 #complete {
   top: -400px;
-  background-color: rgba(100, 255, 100, 0.9); }
+  background-color: rgba(125, 255, 191, 0.9); }
 
 #pause, #complete {
   position: absolute;
@@ -168,6 +186,7 @@ input {
   background-color: var(--dup-bg); }
 
 #puzzle {
+  background: var(--puz-bg);
   border: 4px outset #555;
   border-radius: 10px;
   height: 360px;
@@ -183,7 +202,8 @@ input {
     border-spacing: 0px;
     border: 1px dotted black; }
     #puzzle td input {
-      background-color: var(--page-bg);
+      color: var(--puz-text);
+      background-color: var(--puz-bg);
       border-radius: 30%;
       font-size: 16px;
       width: 20px;

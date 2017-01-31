@@ -1,5 +1,6 @@
 var timeUpdate; // = setInterval(updateDisplay, 1000); // every second call 
 var running = false;
+var help = false;
 var puzzleDefault = [[5,3,4,6,7,8,9,1,2],
                  [6,7,2,1,9,5,3,4,8],
                  [1,9,8,3,4,2,5,6,7],
@@ -63,7 +64,6 @@ function hitPause() {
     // clock is going
     $('#pause').css('top','11.5vh');
     $("#pause").css('transition','.5s');
-    $("#pause").css('background.color', 'red');
     $("#pause_resume").val("Resume");
     clearInterval(timeUpdate);
     running = false;
@@ -78,13 +78,15 @@ function hitPause() {
 
 function helpMe () {
   if ($('#help_text').css('display') === 'none') {
+    help = true;
     $('#help_text').css('display','block');
     $('#overlay').css('display','block');
     $("#pause_resume").val("Resume");
-    $('#exit').focus();
+    $('#pause_resume').focus();
     clearInterval(timeUpdate);
   }
   else { // clicking on 'X' when help is open
+    help = false;
     $('#help_text').css('display','none');
     $('#overlay').css('display','none');
     $('#help').focus();
@@ -98,20 +100,24 @@ function helpMe () {
 function updateCount() {
   var txt = $('#puzzle').text();
   for (var i = 1; i <= 9; i++ ) {
-    var count = txt.split(i).length - 1;
-    console.log(i + ' appears ' + count + ' times');
-        
+    var count = txt.split(i).length - 1;        
     var html = '<p>'+i+'</p><span>'+count+'</span>';
     $('#sidebar div:nth-of-type('+i+')').html('');
     $('#sidebar div:nth-of-type('+i+')').append(html);
     
-    if(count === 9) {
-      //$('#sidebar div:nth-of-type('+i+') span').css('text-shadow','2px 2px var(--count-green)');
-      $('#sidebar div:nth-of-type('+i+') span').css('color','var(--count-green)');
+    if (count < 9) {
+      $('#sidebar div:nth-of-type('+i+') span').css('color','var(--count)');
+      $('#sidebar div:nth-of-type('+i+') span').parent('div').css('background','var(--nav-bg');      
     }
-    else if(count >= 9) {
+    else if(count === 9) {
+      //$('#sidebar div:nth-of-type('+i+') span').css('text-shadow','2px 2px var(--count-green)');
+      $('#sidebar div:nth-of-type('+i+') span').css('color','#CCC');
+      $('#sidebar div:nth-of-type('+i+') span').parent('div').css('background','var(--count-green');
+    }
+    else if(count > 9) {
       //$('#sidebar div:nth-of-type('+i+') span').css('text-shadow','2px 2px var(--count-red)');
-      $('#sidebar div:nth-of-type('+i+') span').css('color','var(--count-red)');
+      $('#sidebar div:nth-of-type('+i+') span').css('color','#CCC');
+      $('#sidebar div:nth-of-type('+i+') span').parent('div').css('background','var(--count-red');
     }
   }
 } // checking number of occurrences in puzzle
@@ -166,6 +172,105 @@ function array2HTML(puzzleOrig) {
     tempStr += '</tr>';
   }
   return tempStr;
+}
+
+function check4dups (row, col, val) {
+  var puzzle = HTML2array();
+  var dups = new Array();
+  console.log('('+row+', '+col+') value: ' + val);
+  rowSub = parseInt(row / 3);
+  colSub = parseInt(col / 3);
+  
+  //checking columns
+  for (var i = 0; i < puzzle.length; i++) {
+      if ((row !== i) && (val === (puzzle[i][col])) && val !== '') {
+        dups.push([i, col]);
+      }
+    }
+
+  //checking for conflicts in boxes
+  for (var i = 0; i < 3; i++) {
+    for (var j = 0; j < 3; j++) {
+      row1 = rowSub * 3 + i;
+      col1 = colSub * 3 + j;
+      var diffCell = (col !== col1) || (row !== row1);
+      if ( diffCell && val === puzzle[row1][col1] && val !== '') {
+        dups.push([row1,col1]);
+      }
+    }
+  }
+
+  //checking for conflicts in rows
+  for (var i = 0; i < puzzle[row].length; i++) {
+    if ((col !== i) && (val === (puzzle[row][i])) && val !== '') {
+      dups.push([row, i]);
+    }
+  }
+  
+  if (dups.length > 0) {
+    dups.push([row,col]);
+  }
+  console.log(dups);
+  return dups;
+}
+
+function checkAllDups () {
+  var puzzle = HTML2array();
+  var dups = new Array();
+  
+  for (x=1; x<=9; x++) { // running through each number one at a time
+    for (var row=0; row<puzzle.length; row++) {
+      var tmpArr = new Array();
+      for (var col = 0; col < puzzle[row].length; col++) {
+        //console.log(x+' - ('+row+', '+col+') value '+parseInt(puzzle[row][col]));
+        if (x === parseInt(puzzle[row][col])) {
+          console.log('('+row+', '+col + ') value: '+ x);
+          tmpArr.push([row,col]);
+        }
+      }
+      if (tmpArr.length > 1) { // if more than 1 instance of value in row
+        for (var j=0; j<tmpArr.length; j++) {
+          dups.push([tmpArr[j][0],tmpArr[j][1]]);
+        }
+      }
+    } // checking rows
+    
+    for (var col=0; col<puzzle[0].length; col++ ) {
+      var tmpArr = new Array();
+      for (var row=0; row<puzzle.length; row++) {
+        if (x === parseInt(puzzle[row][col])) {
+          tmpArr.push([row,col]);
+        }
+      }
+      if (tmpArr.length > 1) {
+        for (var j=0; j<tmpArr.length; j++) {
+          dups.push([tmpArr[j][0],tmpArr[j][1]]);
+        }
+      }
+    } // checking columns
+    
+    for (var subRow=0; subRow < 3; subRow++) {
+      for (var subCol = 0; subCol < 3; subCol++) { //checking each block
+        var tmpArr = new Array();
+        for (var i = 0; i < 3; i++) {
+          for (var j = 0; j < 3; j++) {
+            row = subRow * 3 + i; 
+            col = subCol * 3 + j;
+            if (x === parseInt(puzzle[row][col])) {
+              tmpArr.push([row,col]);
+            }
+          }
+        }
+        if (tmpArr.length > 1) {
+          for (var j=0; j<tmpArr.length; j++) {
+            dups.push([tmpArr[j][0],tmpArr[j][1]]);
+          }
+        }
+      }
+    } // checking blocks
+  }
+  console.log(dups);
+  return dups;
 }
 
 function loadTable(puzzleOrig, level) { //loads the initial sudoku puzzle
@@ -290,54 +395,31 @@ function playPuzzle() {
 
     updateCount(); // update the count for each number
 
-    // checking for duplicate values
-    var puzzle = HTML2array();
+    // checking for duplicate values    
     var row = $(this).parent('td').parent().index();
     var col = $(this).parent('td').index();
-    var rowSub = parseInt(row / 3);
-    var colSub = parseInt(col / 3);
-    console.log("(" + row + ", " +col + ') value: ' + $(this).val());
+    //var duplicates = check4dups(row, col, $(this).val()); // checks dups of current cell
+    var duplicates = checkAllDups(); // checks for all dups in the puzzle
 
-    //checking for conflicts in columns
-    for (var i = 0; i < puzzle.length; i++) {
-      if ((row !== i) && ($(this).val() === (puzzle[i][col])) && $(this).val() !== '') {
-        $(this).parent('td').addClass('dup');
-        $('#puzzle tr:nth-of-type('+(i+1)+') td:nth-of-type('+(col+1)+')').addClass('dup');
-      }
-    }
-
-    //checking for conflicts in boxes
-    for (var i = 0; i < 3; i++) {
-      for (var j = 0; j < 3; j++) {
-        row1 = rowSub * 3 + i;
-        col1 = colSub * 3 + j;
-        var diffCell = (col !== col1) || (row !== row1);
-        if ( diffCell && $(this).val() === puzzle[row1][col1] && $(this).val() !== '') {
-          $(this).parent('td').addClass('dup');
-          $('#puzzle tr:nth-of-type('+(row1+1)+') td:nth-of-type('+(col1+1)+')').addClass('dup');
-        }
-      }
-    }
-
-    //checking for conflicts in rows
-    for (var i = 0; i < puzzle[row].length; i++) {
-      if ((col !== i) && ($(this).val() === (puzzle[row][i])) && $(this).val() !== '') {
-        $(this).parent('td').addClass('dup');
-        $('#puzzle tr:nth-of-type('+(row+1)+') td:nth-of-type('+(i+1)+')').addClass('dup');
-      }
+    //highlighting duplicate cells based on array of duplicate values
+    $('#puzzle td').removeClass('dup');
+    for (var x = 0; x < duplicates.length; x++) {
+      var r = duplicates[x][0] + 1;
+      var c = duplicates[x][1] + 1;
+      $('#puzzle tr:nth-of-type('+r+') td:nth-of-type('+c+')').addClass('dup');
     }
 
     // check to see if puzzle is complete
     var complete = true;
+    var puzzle = HTML2array();
     for (var i = 0; i < puzzle.length; i++) {
       for (var j = 0; j < puzzle[i].length; j++) {
-        if (puzzle[i][j] === '') {
+        if (puzzle[i][j] === '' || duplicates.length > 1) {
           complete = false;
         }
       }
     }
     if (complete) {
-      console.log("Congratulations!");
       clearInterval(timeUpdate);
       $('#complete').css('top','11.5vh');
       $("#complete").css('transition','.5s');
@@ -346,33 +428,40 @@ function playPuzzle() {
   });
   
   $('.cell input').keydown(function(e) {
+    var puzzle = HTML2array();
     var valid = validChar(e.which);
-
     if (!valid) {
-      if (e.which === 8) { // listening for backspace
-      }
-      else if (e.which === 9) {} // listening for tab
+      var row = $(this).parent('td').parent().index();
+      var col = $(this).parent('td').index();
+      
+      if (e.which === 8) {} // listening for backspace
+      else if (e.which === 9) {
+        $('#puzzle .cell').next().find('input').addClass('focus');
+      } // listening for tab
       else if (e.which === 37) {
-        console.log('down');
+        if (col > 0) {
+          $('#puzzle tr:nth-of-type('+(row+1)+') td:nth-of-type('+col+')').addClass('focus');
+        }
       } // left arrow
       else if (e.which === 38) {
-        console.log('up');
+        if (row > 0) {
+          $('#puzzle tr:nth-of-type('+(row)+') td:nth-of-type('+(col+1)+')').addClass('focus');
+        }
       } // up arrow
       else if (e.which === 39) {
-        console.log('right');
+        if (col < puzzle[0].length - 1) {
+          $('#puzzle tr:nth-of-type('+(row+1)+') td:nth-of-type('+(col+2)+')').addClass('focus');
+        }
       } // right arrow
       else if (e.which === 40) {
-        console.log('down');
+        if (row < puzzle.length - 1) {
+          $('#puzzle tr:nth-of-type('+(row+2)+') td:nth-of-type('+(col+1)+')').addClass('focus');
+        }
       } // down arrow
-      else if (e.which === 80) { // listening for 'p'
-        hitPause();
-        return false;
-      }
-      else if (e.which === 78) { // listening for 'n'
-        newPuzzle();
-        return false;
-      }
-      else {
+      else if (e.which >= 59 && e.which <= 90){
+        if (e.which === 80) {hitPause();}
+        if (e.which === 78) {newPuzzle();}
+        if (e.which === 72) {helpMe();}
         return false;
       }
     }
@@ -399,10 +488,13 @@ jQuery(document).ready(function($) {
 
   $('body').keydown(function (e) {
     if( e.which === 80 ) {
-      if ($('#pause_resume').css('display') !== 'none') {hitPause();}
+      if ($('#pause_resume').css('display') !== 'none' && !help) {hitPause();}
     }
     else if (e.which === 78 ) {
-      newPuzzle();
+      if (!help) {newPuzzle();}
+    }
+    else if (e.which === 72 ) {
+      helpMe();
     }
   });
-});
+}); // general button handling
